@@ -2,14 +2,18 @@
 #include <Utils.h>
 #include <math.h>
 
+void Detecting::setMonotonePicture(vector<int> _picture) {
+	picture = _picture;
+}
+
 Point Detecting::getTreshold (int startX, int startY, int field) {
     Point click (startX,startY);
 
     int max = 0;
     Point maxPoint(-1,-1);
     Point usedPoint(0,0);
-    if (array->size() > 1)
-        usedPoint = array->at(array->size()-2);
+    if (array.size() > 1)
+        usedPoint = array[(array.size()-2)];
 
     for (int i=-field; i<=field; i++)
         for (int j=-field; j<=field; j++) {
@@ -38,11 +42,15 @@ Point Detecting::getTreshold (int startX, int startY, int field) {
     return maxPoint;
 }
 
-void Detecting::setNullForArray() {
-    array->clear();
+void Detecting::setRoI(vector<Point> _RoI) {
+	
 }
 
-vector<Point>* Detecting::getArrayOfPoints() {
+void Detecting::setNullForArray() {
+    array.clear();
+}
+
+vector<Point> Detecting::getArrayOfPoints() {
     return array;
 }
 
@@ -50,13 +58,13 @@ vector<Point>* Detecting::getArrayOfPoints() {
 void Detecting::detectingWithPoints(int startX, int startY, int count) {
     Point null(-10, -10);
     Point firstPoint = getTreshold(startX, startY, 2);
-    array->push_back(firstPoint);
+    array.push_back(firstPoint);
 
     for (int i =0; i < count; i++) {
         Point secondPoint = getTreshold(firstPoint.getX(), firstPoint.getY(), 1);
         null = firstPoint;
         firstPoint = secondPoint;
-        array->push_back(secondPoint);
+        array.push_back(secondPoint);
     }
 }
 
@@ -119,7 +127,7 @@ void Detecting::stepOfRays(int startX, int startY) {
                     }
                 }
                 tresholdOne = tresholdBack;
-                array->push_back(current);
+                array.push_back(current);
                 sob = 0;
             }
             if (j == 0) {

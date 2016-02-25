@@ -28,11 +28,11 @@ class Point {
 	}
 	
 
-	int getX() const {
+	double getX() const {
 		return x;
 	}
 
-	int getY() const {
+	double getY() const {
 		return y;
 	}
 

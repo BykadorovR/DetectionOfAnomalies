@@ -4,13 +4,13 @@
 #include "Ray.h"
 
 
-int* fromUInt16ToUInt8(int* buffer, int size, int windowCenter, int windowWidth) {
-	int* result = new int[size];
+vector<int> fromUInt16ToUInt8(int* buffer, int size, int windowCenter, int windowWidth) {
+	vector<int> result(size);
 	int minValue = buffer[getMinIndex(buffer, size)];
 	int maxValue = buffer[getMaxIndex(buffer, size)];
 	int step = (abs(minValue) + abs(maxValue))/size;
-	windowWidth = 1500;
-	windowCenter = 350;
+	//windowWidth = 1500;
+	//windowCenter = 350;
 	//https://www.dabsoft.ch/dicom/3/C.11.2.1.2/
 	for (int i=0; i<size; i++) {
 		if (buffer[i]<=windowCenter - 0.5 - (windowWidth - 1)/2) result[i] = 0;
@@ -44,7 +44,7 @@ int getMaxIndex(int* buffer, int size) {
 	return index;
 }
 
-int operatorSobel(int* array, int width, int height, int center) {
+int operatorSobel(vector<int> array, int width, int height, int center) {
 	int GX[3][3] = {{-1, 0, 1},
                  {-2, 0, 2},
                  {-1, 0, 1}};
@@ -84,4 +84,25 @@ double dispersion (set<Point>& array, Point center) {
     }
     sum = sum / array.size();
     return sqrt(sum);
+}
+
+bool _relationOfPointAndPolygon(int x, int y, vector<Point> polygon) {
+	for (int i = 1; i < polygon.size(); i++) {
+		int A = -(polygon[i].getY() - polygon[i-1].getY());
+		int B = polygon[i].getX() - polygon[i-1].getX();
+		int C = -(A * polygon[i - 1].getX() + B*(polygon[i - 1].getY()));
+		int D = A * x + B * y + C;
+		if (D > 0) return false;
+	}
+	return true;
+}
+
+void cropImage(vector<int>& src, int sizeX, int sizeY, vector<Point> polygon) {
+	for (int x = 0; x < sizeX; x++) {
+		for (int y = 0; y < sizeY; y++) {
+			if (!_relationOfPointAndPolygon(x, sizeY - y, polygon)) {
+				src[x + y*sizeX] = 0;
+			}
+		}
+	}
 }
