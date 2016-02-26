@@ -29,7 +29,7 @@ endif(NOT OPENGL_FOUND)
 #########################################################
 # FIND GDCM
 #########################################################
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} /MDd")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 FIND_PACKAGE(GDCM REQUIRED)
     IF(GDCM_FOUND)
         include(${GDCM_USE_FILE})
